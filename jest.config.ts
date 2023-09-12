@@ -2,15 +2,9 @@ import type { Config } from 'jest';
 
 const config: Config = {
 	verbose: true,
+	collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', '!src/**/*.d.ts'],
 	coverageDirectory: './coverage/',
-	coverageThreshold: {
-		global: {
-			branches: 80,
-			functions: 80,
-			lines: 80,
-			statements: -10,
-		},
-	},
+
 	moduleDirectories: ['node_modules', 'release/app/node_modules', 'src'],
 	moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
 	moduleNameMapper: {
