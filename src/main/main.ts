@@ -14,6 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import Database from './database';
 
 class AppUpdater {
 	constructor() {
@@ -25,12 +26,17 @@ class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const db = new Database();
+
 // // example ipc communication between main and renderer
 ipcMain.on('ipc-example', async (event, arg) => {
 	const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
 	console.log(msgTemplate(arg));
 	event.reply('ipc-example', msgTemplate('pong'));
 });
+
+ipcMain.on('send-query', async () => {});
 
 if (process.env.NODE_ENV === 'production') {
 	const sourceMapSupport = require('source-map-support');
