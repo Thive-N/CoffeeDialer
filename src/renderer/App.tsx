@@ -1,12 +1,11 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import icon from '../../assets/icon.svg';
 import './App.css';
 
 function Hello() {
 	return (
 		<div>
 			<div className="Hello">
-				<img width="200" alt="icon" src={icon} />
+				<img width="200" alt="icon" />
 			</div>
 			<h1>electron-react-typescript</h1>
 		</div>
