@@ -4,6 +4,12 @@ const config: Config = {
 	verbose: true,
 	collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', '!src/**/*.d.ts'],
 	coverageDirectory: './coverage/',
+	coveragePathIgnorePatterns: [
+		'./src/main/main.ts',
+		'./src/main/preload.ts',
+		'./src/main/util.ts',
+		'./src/main/menu.ts',
+	],
 
 	moduleDirectories: ['node_modules', 'release/app/node_modules', 'src'],
 	moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
