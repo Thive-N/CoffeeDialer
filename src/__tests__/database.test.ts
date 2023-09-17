@@ -1,13 +1,19 @@
 import Database from '../main/database/database';
 import * as models from '../main/database/models';
 
-// const fs = require('fs');
+const fs = require('fs');
 
 const TESTSQLITE = './test.sqlite';
 let db: Database;
 
 beforeEach(() => {
 	db = new Database(TESTSQLITE);
+});
+
+beforeAll(async () => {
+	if (fs.existsSync(TESTSQLITE)) {
+		await fs.rmSync(TESTSQLITE);
+	}
 });
 
 describe('database.addBeans', () => {
@@ -49,5 +55,26 @@ describe('database.addRating', () => {
 		};
 		const result = await db.addRating(rating);
 		expect(result).toBe(true);
+	});
+});
+
+describe('database.getBeans', () => {
+	test('getting results from the table', async () => {
+		const result = await db.getBeans();
+		expect(result).not.toBe(null);
+	});
+});
+
+describe('database.getBrews', () => {
+	test('getting results from the table', async () => {
+		const result = await db.getBrews();
+		expect(result).not.toBe(null);
+	});
+});
+
+describe('database.getRatings', () => {
+	test('getting results from the table', async () => {
+		const result = await db.getRatings();
+		expect(result).not.toBe(null);
 	});
 });
