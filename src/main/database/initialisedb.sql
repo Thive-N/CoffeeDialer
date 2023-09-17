@@ -1,5 +1,5 @@
 CREATE TABLE Beans(
-  beans_id int PRIMARY KEY,
+  beans_id integer PRIMARY KEY,
   name varchar(50),
   roast varchar(6),
   company varchar(50),
@@ -9,24 +9,24 @@ CREATE TABLE Beans(
 );
 
 CREATE TABLE Brew(
-  brew_id int PRIMARY KEY,
-  beans_id int,
+  brew_id integer PRIMARY KEY,
+  beans_id integer,
   brew_date Date,
-  brew_time int,
-  grind_in int,
-  coffee_out int,
-  grind_size int,
+  brew_time integer,
+  grind_in integer,
+  coffee_out integer,
+  grind_size integer,
   
   FOREIGN KEY (beans_id) REFERENCES Beans(beans_id)
 );
 
 CREATE TABLE Rating(
-  rating_id int PRIMARY KEY,
-  brew_id int,
-  rating int,
+  rating_id integer PRIMARY KEY,
+  brew_id integer,
+  rating integer,
   notes text,
-  bitterness int,
-  acidity int,
+  bitterness integer,
+  acidity integer,
   
   FOREIGN KEY (brew_id) REFERENCES Brew(brew_id)
 );
