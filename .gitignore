@@ -28,5 +28,5 @@ npm-debug.log.*
 *.sass.d.ts
 *.scss.d.ts
 
-# the sqlite3 database this project uses
-assets/db.sqlite
+# all sqlite3 databases this project uses
+**/*.sqlite
