@@ -1,3 +1,4 @@
+/* eslint-disable compat/compat */
 import * as sqlite3 from 'sqlite3';
 import { Beans, Brew, Rating } from './models';
 
@@ -16,113 +17,122 @@ export default class Database {
 		}
 	}
 
-	public async teardown(): Promise<void> {
-		this.handle.close();
+	public async teardown(): Promise<boolean> {
+		return new Promise((resolve) => {
+			this.handle.close(() => {
+				resolve(true);
+			});
+		});
 	}
 
 	public async addBeans(beans: Beans): Promise<Error | boolean> {
 		const sql = `INSERT INTO Beans (name, roast, company, roast_date) VALUES (?,?,?,?)`;
-		let error: Error | null = null;
-
 		const rd = beans.roast_date.toISOString();
-		this.handle.run(sql, [beans.name, beans.roast, beans.company, rd], (err: Error) => {
-			if (err) {
-				error = err;
-			}
+
+		return new Promise((resolve, reject) => {
+			this.handle.run(sql, [beans.name, beans.roast, beans.company, rd], (err: Error) => {
+				if (err) {
+					reject(err);
+				}
+				resolve(true);
+			});
 		});
-		if (error) {
-			return error;
-		}
-		return true;
 	}
 
-	public async addBrew(brew: Brew): Promise<boolean> {
+	public async addBrew(brew: Brew): Promise<Error | boolean> {
 		const sql = `INSERT INTO Brew (beans_id, brew_date, brew_time, grind_in, coffee_out, grind_size) VALUES (?,?,?,?,?,?)`;
-		let error: Error | null = null;
-
 		const bd = brew.brew_date.toISOString();
-		this.handle.run(
-			sql,
-			[brew.beans_id, bd, brew.brew_time, brew.grind_in, brew.coffee_out, brew.grind_size],
-			(err: Error) => {
-				if (err) {
-					error = err;
-				}
-			},
-		);
-		if (error) {
-			return error;
-		}
-		return true;
+
+		return new Promise((resolve, reject) => {
+			this.handle.run(
+				sql,
+				[brew.beans_id, bd, brew.brew_time, brew.grind_in, brew.coffee_out, brew.grind_size],
+				(err: Error) => {
+					if (err) {
+						reject(err);
+					}
+					resolve(true);
+				},
+			);
+		});
 	}
 
-	public async addRating(rating: Rating): Promise<boolean> {
+	public async addRating(rating: Rating): Promise<Error | boolean> {
 		const sql = `INSERT INTO Rating (brew_id, rating, notes, bitterness, acidity) VALUES (?,?,?,?,?)`;
-		let error: Error | null = null;
 
-		this.handle.run(
-			sql,
-			[rating.brew_id, rating.rating, rating.notes, rating.bitterness, rating.acidity],
-			(err: Error) => {
-				if (err) {
-					error = err;
-				}
-			},
-		);
-		if (error) {
-			return error;
-		}
-		return true;
+		return new Promise((resolve, reject) => {
+			this.handle.run(
+				sql,
+				[rating.brew_id, rating.rating, rating.notes, rating.bitterness, rating.acidity],
+				(err: Error) => {
+					if (err) {
+						reject(err);
+					}
+					resolve(true);
+				},
+			);
+		});
 	}
 
-	public async getBeans(): Promise<Beans[] | Error> {
+	public async getBeans(): Promise<Error | Beans[]> {
 		const sql = `SELECT * FROM Beans`;
-		let beans: Beans[] = [];
-		let error: Error | null = null;
 
-		this.handle.all(sql, [], (err: Error, rows: Beans[]) => {
-			if (err) {
-				error = err;
-			}
-			beans = rows;
+		return new Promise((resolve, reject) => {
+			this.handle.all(sql, (err: Error, rows: any[]) => {
+				if (err) {
+					reject(err);
+				}
+				resolve(
+					rows.map((row: any): Beans => {
+						return {
+							beans_id: row.beans_id,
+							name: row.name,
+							roast: row.roast,
+							company: row.company,
+							roast_date: new Date(row.roast_date),
+						};
+					}),
+				);
+			});
 		});
-		if (error) {
-			return error;
-		}
-		return beans;
 	}
 
-	public async getBrews(): Promise<Brew[] | Error> {
+	public async getBrews(): Promise<Error | Brew[]> {
 		const sql = `SELECT * FROM Brew`;
-		let brew: Brew[] = [];
-		let error: Error | null = null;
 
-		this.handle.all(sql, [], (err: Error, rows: Brew[]) => {
-			if (err) {
-				error = err;
-			}
-			brew = rows;
+		return new Promise((resolve, reject) => {
+			this.handle.all(sql, (err: Error, rows: any[]) => {
+				if (err) {
+					reject(err);
+				}
+				resolve(
+					rows.map((row: any) => {
+						return {
+							brew_id: row.Brew_id,
+							beans_id: row.beans_id,
+							brew_date: new Date(row.brew_date),
+							brew_time: row.brew_time,
+							grind_in: row.grind_in,
+							coffee_out: row.coffee_out,
+							grind_size: row.grind_size,
+						};
+					}),
+				);
+			});
 		});
-		if (error) {
-			return error;
-		}
-		return brew;
 	}
 
 	public async getRatings(): Promise<Rating[] | Error> {
 		const sql = `SELECT * FROM Rating`;
-		let rating: Rating[] = [];
-		let error: Error | null = null;
 
-		this.handle.all(sql, [], (err: Error, rows: Rating[]) => {
-			if (err) {
-				error = err;
-			}
-			rating = rows;
+		return new Promise((resolve, reject) => {
+			this.handle.all(sql, [], (err: Error, rows: any[]) => {
+				if (err) {
+					reject(err);
+				}
+
+				resolve(rows);
+			});
 		});
-		if (error) {
-			return error;
-		}
-		return rating;
 	}
 }

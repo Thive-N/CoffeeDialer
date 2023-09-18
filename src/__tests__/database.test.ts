@@ -78,3 +78,10 @@ describe('database.getRatings', () => {
 		expect(result).not.toBe(null);
 	});
 });
+
+describe('database.teardown', () => {
+	test('closing the database', async () => {
+		const result = await db.teardown();
+		expect(result).toBe(true);
+	});
+});

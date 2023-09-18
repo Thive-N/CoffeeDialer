@@ -9,6 +9,7 @@ const config: Config = {
 		'./src/main/preload.ts',
 		'./src/main/util.ts',
 		'./src/main/menu.ts',
+		'./src/renderer/index.tsx',
 	],
 
 	moduleDirectories: ['node_modules', 'release/app/node_modules', 'src'],
