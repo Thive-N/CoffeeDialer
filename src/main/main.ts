@@ -15,6 +15,7 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import Database from './database/database';
+import ConfigManager from './config/config';
 
 class AppUpdater {
 	constructor() {
@@ -28,6 +29,8 @@ let mainWindow: BrowserWindow | null = null;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const db = new Database();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const cm = new ConfigManager();
 
 // // example ipc communication between main and renderer
 ipcMain.on('ipc-example', async (event, arg) => {
@@ -37,6 +40,11 @@ ipcMain.on('ipc-example', async (event, arg) => {
 });
 
 ipcMain.on('send-query', async () => {});
+
+ipcMain.on('get-all-dbs', async (event, arg) => {
+	console.log(arg);
+	event.reply('get-all-dbs', cm.getPreviousDBs());
+});
 
 if (process.env.NODE_ENV === 'production') {
 	const sourceMapSupport = require('source-map-support');
