@@ -41,9 +41,20 @@ ipcMain.on('ipc-example', async (event, arg) => {
 
 ipcMain.on('send-query', async () => {});
 
-ipcMain.on('get-all-dbs', async (event, arg) => {
-	console.log(arg);
+ipcMain.on('get-all-dbs', async (event) => {
 	event.reply('get-all-dbs', cm.getPreviousDBs());
+});
+
+ipcMain.on('set-db', async (event, arg) => {
+	cm.setDB(arg);
+});
+
+ipcMain.on('get-db', async (event) => {
+	event.reply('get-db', cm.getDB());
+});
+
+ipcMain.on('add-previous-db', async (event, arg) => {
+	event.reply('add-previous-db', cm.addPreviousDB(arg));
 });
 
 if (process.env.NODE_ENV === 'production') {
