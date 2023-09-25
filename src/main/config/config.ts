@@ -31,11 +31,11 @@ class ConfigManager {
 		}
 	}
 
-	public loadDB(): Config {
+	private loadDB(): Config {
 		return fs.readFileSync(this.jsonPath, 'utf8');
 	}
 
-	public saveDB(): void {
+	private saveDB(): void {
 		fs.writeFileSync(this.jsonPath, JSON.stringify(this.config));
 	}
 
